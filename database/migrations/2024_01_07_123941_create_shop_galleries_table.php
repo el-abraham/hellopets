@@ -1,0 +1,46 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('shop_galleries', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('shop_id')->constrained(
+                table: 'shops',
+                indexName: 'shop_galleries_shop_id'
+            );
+
+            $table->string('slug');
+
+            $table->string('path');
+
+            $table->enum('type', ['image', 'video']);
+
+            $table->timestamps();
+
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('shop_galleries', function (Blueprint $table) {
+            $table->dropForeign('shop_galleries_shop_id');
+            $table->dropSoftDeletes();
+        });
+
+        Schema::dropIfExists('shop_galleries');
+    }
+};
