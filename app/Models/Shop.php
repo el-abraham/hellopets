@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
 {
@@ -16,6 +17,17 @@ class Shop extends Model
         'description',
         'email',
         'alamat',
-        'no_telp'
+        'no_telp',
+        'facilities'
     ];
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(ShopGallery::class);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
 }

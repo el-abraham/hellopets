@@ -26,6 +26,8 @@ return new class extends Migration
 
             $table->string("email");
 
+            $table->string("facilities");
+
             $table->string("alamat");
 
             $table->string("no_telp");
@@ -42,7 +44,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('shops', function (Blueprint $table) {
-            $table->dropForeign('shop_user_id');
+            $table->dropForeign('shops_user_id');
             $table->dropSoftDeletes();
         });
 

@@ -14,38 +14,53 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/Components/ui/calendar";
 import { Input } from "@/Components/ui/input";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
+import { PageProps } from "@/types";
 
 
-export default function DetailPetshop() {
+export default function DetailPetshop({ shop, galleries, products }: PageProps<{ shop: any, galleries: any[], products: any[] }>) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   })
+
   return (
-    <div className="container mt-10">
+    <div className="container lg:px-40 mt-10">
       <section className="grid grid-rows-2 grid-cols-4 gap-4 h-[400px]">
-        <div className="bg-green-500 col-span-2 row-span-2"></div>
-        <div className="bg-green-500"></div>
-        <div className="bg-green-500"></div>
-        <div className="bg-green-500"></div>
-        <div className="bg-green-500"></div>
+        {
+          galleries.map((gallery, index) => {
+            if (index == 0) {
+              return (
+                <img key={Date.now() + index} src={gallery.path} className="col-span-2 rounded-lg row-span-2 h-full w-full object-cover border" />
+              )
+
+            }
+
+            if (index >= 5) {
+              return <Fragment key={Date.now() + index}></Fragment>
+            }
+            return (
+              <img key={Date.now() + index} src={gallery.path} className="h-full w-full object-cover rounded-lg border" />
+
+            )
+          })
+        }
       </section>
       <div className="flex relative mt-10 justify-between">
         <div className="w-7/12 relative">
-          <ShopHeader />
+          <ShopHeader name={shop.name} />
           <div className="mt-10" />
           <PetIcons />
           <div className="mt-20" />
-          <ShopAbout />
+          <ShopAbout description={shop.description} />
           <div className="mt-20" />
           <ShopFacilities />
           <div className="mt-20" />
         </div>
 
-        <div className="w-3/12 rounded-xl self-start border p-8">
+        <div className="w-4/12 rounded-xl self-start border p-8">
           <Select>
             <SelectTrigger className="w-full h-12 text-md font-semibold">
               <SelectValue placeholder="Select a pet" />
@@ -110,13 +125,18 @@ export default function DetailPetshop() {
   )
 }
 
-const ShopHeader = () => {
+type ShopHeaderType = {
+  name: string,
+  rating?: string
+}
+
+const ShopHeader = ({ name, rating }: ShopHeaderType) => {
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Nama Petshop</h1>
+      <h1 className="text-3xl font-semibold">{name}</h1>
       <div className="flex items-center font-semibold space-x-1">
         <StarFilledIcon className="w-4 h-4" />
-        <span>4.5</span>
+        <span>{rating ?? 4.5}</span>
       </div>
     </div>
 
@@ -124,11 +144,15 @@ const ShopHeader = () => {
   )
 }
 
-const ShopAbout = () => {
+type ShopAboutType = {
+  description: string
+}
+
+const ShopAbout = ({ description }: ShopAboutType) => {
   return (
     <div className="space-y-5">
       <h2 className="font-semibold text-2xl">About this place</h2>
-      <p className="text-justify">Hi I'm Valentina! I'm 31 and I'm an interior designer.I rent a room with a double bed in my cute apartment. I love sharing experiences, getting to know new people, and giving you helpful tips for your stay.The apartment is cozy, with everything you need. You can use all common areas as long as it is maintained with respect to the things of others. :) Please let me know if you have any questions!</p>
+      <p className="text-justify">{description}</p>
     </div>
   )
 }

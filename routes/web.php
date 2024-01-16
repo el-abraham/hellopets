@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ShopGalleryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,9 +31,20 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/shop', function () {
-    return Inertia::render('Petshop/DetailPetshop');
-})->middleware(['auth', 'verified'])->name('detail-shop');
+Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth', 'verified'])->name('shop.detail');
+
+Route::get('/shop-register', [ShopController::class, 'register'])->middleware(['auth', 'verified'])->name('shop.register');
+
+Route::post('/shop-register', [ShopController::class, 'store']);
+
+Route::post('/upload-image', [ShopGalleryController::class, 'upload']);
+
+Route::get('/testing', function () {
+    $client = new GuzzleHttp\Client();
+    $res = $client->get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+
+    dd($res->getBody());
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
