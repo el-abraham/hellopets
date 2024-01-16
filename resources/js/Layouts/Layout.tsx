@@ -22,9 +22,78 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
 import { Button } from '@/Components/ui/button';
+import { AvatarIcon } from '@radix-ui/react-icons';
 
 
-export default function Layout({ children }: PropsWithChildren) {
+type LayoutType = {
+  user: null | User
+}
+
+export default function Layout({ children, user }: PropsWithChildren & LayoutType) {
+
+  const LoadAuthenticated = () => {
+    if (user) {
+      if (user.role == "shop_master") {
+        return (
+          <div>shop master</div>
+        )
+      } else {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">My</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  Chat
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  Settings
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator className='bg-primary/10' />
+              <DropdownMenuItem>
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    } else {
+      return (
+        <>
+          <Link href='register-uh'>
+            <Button>Set up Your Pet House</Button>
+          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className='rounded-full px-3'>
+                <AvatarIcon className='w-6 h-6' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuGroup>
+                <Link href='/register'>
+                  <DropdownMenuItem>
+                    Sign up
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={'/login'}>
+                  <DropdownMenuItem>
+                    Log in
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      )
+    }
+  }
 
   return (
     // <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -35,29 +104,10 @@ export default function Layout({ children }: PropsWithChildren) {
             <img className='w-40' src={HelloPetsLogo} alt="logo-hellopets" />
           </div>
 
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">My</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    Chat
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    Settings
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator className='bg-primary/10' />
-                <DropdownMenuItem>
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className='flex items-center space-x-5'>
+            {
+              LoadAuthenticated()
+            }
           </div>
 
         </nav>

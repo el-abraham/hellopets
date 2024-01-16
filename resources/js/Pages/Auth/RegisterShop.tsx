@@ -6,14 +6,14 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Register() {
+export default function RegisterShop() {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     no_telp: '',
     email: '',
     password: '',
     password_confirmation: '',
-    role: 'pet_master',
+    role: 'shop_master',
   });
 
   useEffect(() => {

@@ -50,6 +50,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        if ($user->role == "shop_master")
+            return redirect(RouteServiceProvider::SHOP_REGISTER);
+        else
+            return redirect(RouteServiceProvider::HOME);
     }
 }

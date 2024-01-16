@@ -16,6 +16,7 @@ class ShopController extends Controller
         $params = [];
         if ($shop) {
             $params["shop"] = $shop;
+            $params["shop"]->facilities = json_decode($shop->facilities);
             $params["galleries"] = $shop->galleries()->get()->map(function ($photo) {
                 $photo["path"] =  asset('storage/galleries/' . $photo->path);
                 return $photo;

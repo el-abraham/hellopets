@@ -35,6 +35,10 @@ Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth',
 
 Route::get('/shop-register', [ShopController::class, 'register'])->middleware(['auth', 'verified'])->name('shop.register');
 
+Route::get('/register-uh', function () {
+    return Inertia::render('Auth/RegisterShop');
+});
+
 Route::post('/shop-register', [ShopController::class, 'store']);
 
 Route::post('/upload-image', [ShopGalleryController::class, 'upload']);

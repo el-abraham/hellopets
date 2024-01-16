@@ -21,10 +21,11 @@ import Layout from '@/Layouts/Layout';
 
 
 export default function Welcome({ auth, laravelVersion, phpVersion }: PageProps<{ laravelVersion: string, phpVersion: string }>) {
+
   return (
     <>
       <Head title="HelloPets" />
-      <Layout>
+      <Layout user={auth.user}>
 
         <hr />
 

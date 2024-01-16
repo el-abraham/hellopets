@@ -1,5 +1,5 @@
 import { Button } from "@/Components/ui/button";
-import { CalendarIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, Component1Icon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 
 import {
   Select,
@@ -18,110 +18,144 @@ import { Fragment, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
 import { PageProps } from "@/types";
+import { Head } from "@inertiajs/react";
+import Layout from "@/Layouts/Layout";
 
+interface Product {
+  id: number;
+  price: number;
+  name: string;
+}
 
-export default function DetailPetshop({ shop, galleries, products }: PageProps<{ shop: any, galleries: any[], products: any[] }>) {
+interface Gallery {
+  id: number;
+  path: string;
+  slug?: string;
+  type: string;
+}
+
+interface Shop {
+  id: number;
+  alamat: string;
+  email: string;
+  facilities: string[],
+  name: string;
+  no_telp: string;
+  description: string;
+}
+
+export default function DetailPetshop({ shop, galleries, products, auth }: PageProps<{ shop: Shop, galleries: Gallery[], products: Product[] }>) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   })
 
+
   return (
-    <div className="container lg:px-40 mt-10">
-      <section className="grid grid-rows-2 grid-cols-4 gap-4 h-[400px]">
-        {
-          galleries.map((gallery, index) => {
-            if (index == 0) {
-              return (
-                <img key={Date.now() + index} src={gallery.path} className="col-span-2 rounded-lg row-span-2 h-full w-full object-cover border" />
-              )
+    <>
 
+      <Head title="HelloPets" />
+      <Layout user={auth.user}>
+        <div className="container lg:px-40 mt-10">
+          <section className="grid grid-rows-2 grid-cols-4 gap-4 h-[400px]">
+            {
+              galleries.map((gallery, index) => {
+                if (index == 0) {
+                  return (
+                    <img key={Date.now() + index} src={gallery.path} className="col-span-2 rounded-lg row-span-2 h-full w-full object-cover border" />
+                  )
+
+                }
+
+                if (index >= 5) {
+                  return <Fragment key={Date.now() + index}></Fragment>
+                }
+                return (
+                  <img key={Date.now() + index} src={gallery.path} className="h-full w-full object-cover rounded-lg border" />
+
+                )
+              })
             }
+          </section>
+          <div className="flex relative mt-10 justify-between">
+            <div className="w-7/12 relative">
+              <ShopHeader name={shop.name} />
+              <div className="mt-10" />
+              <PetIcons pets={products} />
+              <div className="mt-20" />
+              <ShopAbout description={shop.description} />
+              <div className="mt-20" />
+              <ShopFacilities facilities={shop.facilities} />
+              <div className="mt-20" />
+            </div>
 
-            if (index >= 5) {
-              return <Fragment key={Date.now() + index}></Fragment>
-            }
-            return (
-              <img key={Date.now() + index} src={gallery.path} className="h-full w-full object-cover rounded-lg border" />
+            <div className="w-4/12 rounded-xl self-start border p-8">
+              <Select>
+                <SelectTrigger className="w-full h-12 text-md font-semibold">
+                  <SelectValue placeholder="Select a pet" />
+                </SelectTrigger>
+                <SelectContent>
+                  {
+                    products.map((product, index) => {
+                      const key = Date.now() + index
+                      return <SelectItem key={key} value={product.id.toString()}>{product.name}</SelectItem>
+                    })
+                  }
+                </SelectContent>
+              </Select>
+              <div className="mt-5" />
+              <div className={cn("grid gap-2")}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date"
+                      variant={"outline"}
+                      className={cn(
+                        "w-full text-md font-semibold h-12 justify-start text-left",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date?.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} -{" "}
+                            {format(date.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(date.from, "LLL dd, y")
+                        )
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={date?.from}
+                      selected={date}
+                      onSelect={setDate}
+                      numberOfMonths={2}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            )
-          })
-        }
-      </section>
-      <div className="flex relative mt-10 justify-between">
-        <div className="w-7/12 relative">
-          <ShopHeader name={shop.name} />
-          <div className="mt-10" />
-          <PetIcons />
-          <div className="mt-20" />
-          <ShopAbout description={shop.description} />
-          <div className="mt-20" />
-          <ShopFacilities />
-          <div className="mt-20" />
-        </div>
+              <div className="mt-8" />
 
-        <div className="w-4/12 rounded-xl self-start border p-8">
-          <Select>
-            <SelectTrigger className="w-full h-12 text-md font-semibold">
-              <SelectValue placeholder="Select a pet" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="dog">Dog</SelectItem>
-              <SelectItem value="cat">Cat</SelectItem>
-              <SelectItem value="rabbit">Rabbit</SelectItem>
-              <SelectItem value="bird">Bird</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="mt-5" />
-          <div className={cn("grid gap-2")}>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={"outline"}
-                  className={cn(
-                    "w-full text-md font-semibold h-12 justify-start text-left",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "LLL dd, y")} -{" "}
-                        {format(date.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(date.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
+              <Button className="w-full h-12 text-md"> Chat</Button>
+              <div className="mt-2" />
+              <Button className="w-full text-md font-bold h-12"> Reserve</Button>
+
+            </div>
+
           </div>
-
-          <div className="mt-8" />
-
-          <Button className="w-full h-12 text-md"> Chat</Button>
-          <div className="mt-2" />
-          <Button className="w-full text-md font-bold h-12"> Reserve</Button>
-
         </div>
+      </Layout>
 
-      </div>
-    </div>
+    </>
   )
 }
 
@@ -157,51 +191,73 @@ const ShopAbout = ({ description }: ShopAboutType) => {
   )
 }
 
+type ShopFacilitiesType = {
+  facilities: string[]
+}
 
-const ShopFacilities = () => {
+const ShopFacilities = ({ facilities }: ShopFacilitiesType) => {
+  function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <div className="space-y-5">
       <h2 className="font-semibold text-2xl">Facilities</h2>
 
       <ul className="grid grid-cols-2 w-full gap-5">
-        <FacilityItem />
-        <FacilityItem />
-        <FacilityItem />
-        <FacilityItem />
-        <FacilityItem />
+        {
+          facilities.map((facility, index) => {
+            const key = Date.now() + index;
+            return <FacilityItem key={key} name={capitalizeFirstLetter(facility)} />
+          })
+        }
       </ul>
     </div>
   )
 }
 
-const FacilityItem = () => {
+type FacilityItemType = {
+  name: string
+}
+
+const FacilityItem = ({ name }: FacilityItemType) => {
   return (
     <li className="flex items-center space-x-4">
-      <div className="h-10 w-10 rounded bg-slate-100"></div>
-      <span>Fasilitas 1</span>
+      {/* <div className="h-10 w-10 rounded bg-slate-100"></div> */}
+      <Component1Icon />
+      <span>{name}</span>
     </li>
   )
 }
 
-const PetIcon = () => {
+type PetIconType = {
+  name: string
+}
+
+const PetIcon = ({ name }: PetIconType) => {
   return (
     <div className="flex flex-col items-center">
-      <div className="w-20 h-20 border rounded">
+      <div className="px-3 py-1.5 border rounded">
+        <span className="font-semibold">{name}</span>
 
       </div>
-      <span className="font-semibold">Dogs</span>
     </div>
   )
 }
 
-const PetIcons = () => {
+type PetIconsType = {
+  pets: Product[]
+}
+
+const PetIcons = ({ pets }: PetIconsType) => {
   return (
-    <div className="flex w-full justify-between">
-      <PetIcon />
-      <PetIcon />
-      <PetIcon />
-      <PetIcon />
-      <PetIcon />
+    <div className="grid w-full grid-cols-5 place-content-center">
+      {
+        pets.map((pet, index) => {
+          const key = Date.now() + index;
+          return <PetIcon key={key} name={pet.name} />
+        })
+      }
     </div>
   )
 }
