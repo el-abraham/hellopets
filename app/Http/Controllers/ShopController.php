@@ -28,17 +28,18 @@ class ShopController extends Controller
         return Inertia::render('Petshop/DetailPetshop', $params);
     }
 
-    public function dashboard(Request $request) {
+    public function dashboard(Request $request)
+    {
         $user = Auth::user();
         if ($user && $user->role == "shop_master") {
-            if ($request->has("tab") ) {
+            if ($request->has("tab")) {
                 return Inertia::render('Petshop/DashboardPetshop', ["tab" => $request->tab]);
             }
-            
+
             return Inertia::render('Petshop/DashboardPetshop');
         }
 
-        
+
         return to_route('welcome');
     }
 
@@ -48,8 +49,13 @@ class ShopController extends Controller
     //         return Inertia::render('Petshop/DashboardPetshop');
     //     }
     //     return to_route('Welcome');
-        
+
     // }
+
+    public function makeTransaction(Request $request)
+    {
+        dd($request);
+    }
 
     public function register()
     {

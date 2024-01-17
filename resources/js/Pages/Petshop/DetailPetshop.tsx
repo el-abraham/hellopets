@@ -10,45 +10,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select"
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/Components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/Components/ui/calendar";
 import { Input } from "@/Components/ui/input";
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
-import { PageProps } from "@/types";
-import { Head } from "@inertiajs/react";
+import { Gallery, PageProps, Product, Shop } from "@/types";
+import { Head, router } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
 
-interface Product {
-  id: number;
-  price: number;
-  name: string;
-}
-
-interface Gallery {
-  id: number;
-  path: string;
-  slug?: string;
-  type: string;
-}
-
-interface Shop {
-  id: number;
-  alamat: string;
-  email: string;
-  facilities: string[],
-  name: string;
-  no_telp: string;
-  description: string;
-}
-
 export default function DetailPetshop({ shop, galleries, products, auth }: PageProps<{ shop: Shop, galleries: Gallery[], products: Product[] }>) {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  })
 
 
   return (
@@ -56,7 +38,7 @@ export default function DetailPetshop({ shop, galleries, products, auth }: PageP
 
       <Head title="HelloPets" />
       <Layout user={auth.user}>
-        <div className="container lg:px-40 mt-10">
+        <div className="container lg:px-20 xl:px-40 mt-10">
           <section className="grid grid-rows-2 grid-cols-4 gap-4 h-[400px]">
             {
               galleries.map((gallery, index) => {
@@ -88,68 +70,7 @@ export default function DetailPetshop({ shop, galleries, products, auth }: PageP
               <ShopFacilities facilities={shop.facilities} />
               <div className="mt-20" />
             </div>
-
-            <div className="w-4/12 rounded-xl self-start border p-8">
-              <Select>
-                <SelectTrigger className="w-full h-12 text-md font-semibold">
-                  <SelectValue placeholder="Select a pet" />
-                </SelectTrigger>
-                <SelectContent>
-                  {
-                    products.map((product, index) => {
-                      const key = Date.now() + index
-                      return <SelectItem key={key} value={product.id.toString()}>{product.name}</SelectItem>
-                    })
-                  }
-                </SelectContent>
-              </Select>
-              <div className="mt-5" />
-              <div className={cn("grid gap-2")}>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="date"
-                      variant={"outline"}
-                      className={cn(
-                        "w-full text-md font-semibold h-12 justify-start text-left",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date?.from ? (
-                        date.to ? (
-                          <>
-                            {format(date.from, "LLL dd, y")} -{" "}
-                            {format(date.to, "LLL dd, y")}
-                          </>
-                        ) : (
-                          format(date.from, "LLL dd, y")
-                        )
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={date?.from}
-                      selected={date}
-                      onSelect={setDate}
-                      numberOfMonths={2}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="mt-8" />
-
-              <Button className="w-full h-12 text-md"> Chat</Button>
-              <div className="mt-2" />
-              <Button className="w-full text-md font-bold h-12"> Reserve</Button>
-
-            </div>
+            <OrderSection shopId={shop.id} className="w-4/12 rounded-xl self-start border p-8" products={products} />
 
           </div>
         </div>
@@ -158,6 +79,107 @@ export default function DetailPetshop({ shop, galleries, products, auth }: PageP
     </>
   )
 }
+
+type OrderSectionType = {
+  shopId: number,
+  className?: string,
+  products: Product[]
+}
+
+const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
+  const [date, setDate] = useState<DateRange | undefined>()
+  const [selectedPet, setSelectedPet] = useState('');
+
+  const onSelectPet = (value: string) => {
+    // console.log(products.find(val => val.id == Number(value))!.name)
+    // setSelectedPet(products.find(val => val.id == Number(value))!.name)
+    setSelectedPet(value)
+  }
+
+  const postReserve = useCallback(() => {
+    router.post('/shop-transaction', {
+      shopId,
+      productId: selectedPet,
+      date: date
+    }, { forceFormData: true })
+  }, [selectedPet, date])
+
+
+  return (
+    <div className={`${className ?? ''}`}>
+      <Select value={selectedPet} onValueChange={onSelectPet}>
+        <SelectTrigger className="w-full h-12 text-sm font-semibold">
+          <SelectValue placeholder="Select a pet" />
+        </SelectTrigger>
+        <SelectContent>
+          {
+            products.map((product, index) => {
+              const key = Date.now() + index
+              return <SelectItem key={key} value={product.id.toString()}>{product.name}</SelectItem>
+            })
+          }
+        </SelectContent>
+      </Select>
+      <div className="mt-5" />
+      <div className={cn("grid gap-2")}>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              id="date"
+              variant={"outline"}
+              className={cn(
+                "w-full text-sm font-semibold h-12 justify-start text-left",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date?.from ? (
+                date.to ? (
+                  <>
+                    {format(date.from, "LLL dd, y")} -{" "}
+                    {format(date.to, "LLL dd, y")}
+                  </>
+                ) : (
+                  format(date.from, "LLL dd, y")
+                )
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              disabled={(dt) => dt < new Date()}
+              initialFocus
+              mode="range"
+              defaultMonth={date?.from}
+              selected={date}
+              onSelect={setDate}
+              numberOfMonths={2}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="mt-8" />
+
+      <Dialog>
+        <DialogTrigger className="w-full text-white bg-primary-theme rounded-md text-md font-bold h-12">Reserve</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your account
+              and remove your data from our servers.
+              <Button onClick={postReserve}>Oke</Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
+
 
 type ShopHeaderType = {
   name: string,

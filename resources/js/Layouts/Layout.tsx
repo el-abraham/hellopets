@@ -125,7 +125,9 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
       <div className='sm:px-5 lg:px-20 2xl:container pb-5'>
         <nav className='container-fluid w-full flex justify-between items-center'>
           <div>
-            <img className='w-40' src={HelloPetsLogo} alt="logo-hellopets" />
+            <Link href={route('welcome')}>
+              <img className='w-40' src={HelloPetsLogo} alt="logo-hellopets" />
+            </Link>
           </div>
 
           <div className='flex items-center space-x-5'>
