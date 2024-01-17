@@ -27,7 +27,6 @@ export default function Welcome({ auth, laravelVersion, phpVersion }: PageProps<
       <Head title="HelloPets" />
       <Layout user={auth.user}>
 
-        <hr />
 
         <section className='sm:px-5 lg:px-20 2xl:container mt-10'>
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  2xl:grid-cols-6 gap-10'>

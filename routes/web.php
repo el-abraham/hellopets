@@ -25,11 +25,17 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name("welcome");
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/shop-dashboard', [ShopController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('shop.dashboard');
+
+// Route::get('/shop-dashboard/transactions', function () {
+//     return Inertia::render('Petshop/DashboardPetshop');
+// })->middleware(['auth', 'verified'])->name('shop.dashboard');
 
 Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth', 'verified'])->name('shop.detail');
 

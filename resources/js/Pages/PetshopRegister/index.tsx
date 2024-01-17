@@ -361,7 +361,7 @@ const GetPetshopFacilities = () => {
   }
 
   useEffect(() => {
-    setPetshop({ ...petshop, facilities: checked })
+    setPetshop({ ...petshop, facilities: fasilities.filter(facility => checked.includes(facility.value)).map(val => val.label) })
     setNextButton(checked.length > 0)
   }, [checked])
 

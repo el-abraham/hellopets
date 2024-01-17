@@ -35,7 +35,31 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
     if (user) {
       if (user.role == "shop_master") {
         return (
-          <div>shop master</div>
+          <>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className='rounded-full px-3'>
+                  <AvatarIcon className='w-6 h-6' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuGroup>
+                  <Link href={route('shop.dashboard')}>
+                    <DropdownMenuItem>
+                      My pet house
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator className='bg-primary/10' />
+                <Link href={route('logout')} method='post'>
+                  <DropdownMenuItem>
+                    Log out
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         )
       } else {
         return (
@@ -113,6 +137,8 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
         </nav>
 
       </div>
+
+      <hr />
       <main>{children}</main>
 
     </div >

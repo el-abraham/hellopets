@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\ShopGallery;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -26,6 +27,29 @@ class ShopController extends Controller
 
         return Inertia::render('Petshop/DetailPetshop', $params);
     }
+
+    public function dashboard(Request $request) {
+        $user = Auth::user();
+        if ($user && $user->role == "shop_master") {
+            if ($request->has("tab") ) {
+                return Inertia::render('Petshop/DashboardPetshop', ["tab" => $request->tab]);
+            }
+            
+            return Inertia::render('Petshop/DashboardPetshop');
+        }
+
+        
+        return to_route('welcome');
+    }
+
+    // public function dashboardTransactions() {
+    //     $user = Auth::user();
+    //     if ($user && $user->role_id == "shop_master") {
+    //         return Inertia::render('Petshop/DashboardPetshop');
+    //     }
+    //     return to_route('Welcome');
+        
+    // }
 
     public function register()
     {
@@ -73,7 +97,7 @@ class ShopController extends Controller
 
 
         return Inertia::render('PetshopRegister/index', [
-            'galleries' => true
+            'galleries' => true, 'shop_id' => $shop->id
         ]);
     }
 
