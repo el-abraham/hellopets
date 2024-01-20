@@ -55,12 +55,15 @@ const ShopDisplayItem = ({ shopId, address, name, photo, products, rating }: Sho
 
         <p className='text-primary/80'>{address}</p>
 
-        <div className='flex space-x-2 mt-1'>
+        <div className='flex space-x-2 mt-1 items-center'>
           {
-            products.map((product, index) => {
+            products.slice(0, 2).map((product, index) => {
               const key = Date.now() + index
               return <Badge className='rounded bg-primary-theme/90' key={key}>{product}</Badge>
             })
+          }
+          {
+            products.length > 3 ? <span className="text-xs">and more</span> : <></>
           }
         </div>
 

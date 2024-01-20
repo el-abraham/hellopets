@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ShopGalleryController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,7 +34,7 @@ Route::get('/shop-dashboard', [ShopController::class, 'dashboard'])->middleware(
 
 Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth', 'verified'])->name('shop.detail');
 
-Route::post('/shop-transaction', [ShopController::class, 'makeTransaction'])->middleware(['auth', 'verified'])->name('shop.makeTransaction');
+Route::post('/shop-transaction', [TransactionController::class, 'makeTransaction'])->middleware(['auth', 'verified'])->name('shop.makeTransaction');
 
 Route::get('/shop-register', [ShopController::class, 'register'])->middleware(['auth', 'verified'])->name('shop.register');
 

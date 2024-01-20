@@ -24,14 +24,17 @@ return new class extends Migration
                 indexName: 'transactions_shop_id'
             );
 
-            // $table->foreignId('product_id')->constrained(
-            //     table:'product',
-            //     indexName: 'producs_transcation'
-            // )
+            $table->foreignId('product_id')->constrained(
+                table:'products',
+                indexName: 'transactions_product_id'
+            );
 
             $table->string('no_invoice')->unique();
 
-            $table->integer('qty');
+            // $table->integer('qty');
+            $table->bigInteger('from_date');
+            
+            $table->bigInteger('to_date')->nullable();
 
             $table->bigInteger('total');
 
@@ -48,7 +51,7 @@ return new class extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropForeign('transactions_user_id');
-
+            $table->dropForeign('transactions_product_id');
             $table->dropForeign('transactions_shop_id');
 
             $table->dropSoftDeletes();

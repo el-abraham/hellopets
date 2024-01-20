@@ -131,7 +131,7 @@ const PostPetshop = ({ user }: PostPetshopType) => {
   }, [])
 
   return (
-    <div className="w-full h-full flex items-center place-content-center">
+    <div className="w-full h-full text-primary-theme text-lg font-semibold flex items-center place-content-center">
       Loading
     </div>
   )
@@ -155,7 +155,7 @@ const GetPetshopName = () => {
   }
 
   return (
-    <div className="w-[500px] mt-60">
+    <div className="w-[500px] mt-40">
       <h3 className="text-2xl font-semibold leading-normal">Your pet house name</h3>
       <span className="text-primary/50">ini subscription</span>
       <Textarea spellCheck={false} onChange={textareaHandle} className="resize-none font-medium text-lg rounded-lg h-32 w-full mt-5 border-2" />
@@ -179,7 +179,7 @@ const UploadImage = ({ shop_id }: UploadImageType) => {
   };
 
   return (
-    <div className="w-[500px] mt-60">
+    <div className="w-[500px] mt-40">
       <h3 className="text-2xl font-semibold leading-normal">Add some photos of your pet house</h3>
       <span className="text-primary/50">
         You'll need 5 photos to get started.
@@ -210,7 +210,7 @@ const AfterUploadImage = ({ images, shop_id }: AfterUploadImageType) => {
   };
 
   return (
-    <div className="w-[600px] mt-32">
+    <div className="w-[600px] mt-20">
       <h3 className="text-2xl font-semibold leading-normal">
         Woah!! Your pet house photos
       </h3>
@@ -261,7 +261,7 @@ const GetPetshopPets = () => {
 
 
   return (
-    <div className="w-[600px] mt-52">
+    <div className="w-[600px] mt-32">
       <h3 className="text-2xl font-semibold leading-normal">
         Choose the pets welcome for boarding at your pet house
       </h3>
@@ -298,7 +298,7 @@ const GetPetshopDescription = () => {
     setNextButton(e.currentTarget.value != '')
   }
   return (
-    <div className="w-[600px] mt-52">
+    <div className="w-[600px] mt-20">
       <h3 className="text-2xl font-semibold leading-normal">Create your description</h3>
       <span className="text-primary/50 ">
         Share what makes your place special.
@@ -366,7 +366,7 @@ const GetPetshopFacilities = () => {
   }, [checked])
 
   return (
-    <div className="w-[600px] mt-52">
+    <div className="w-[600px] mt-32">
       <h3 className="text-2xl font-semibold leading-normal">Tell people what your place fasilities</h3>
       <span className="text-primary/50 ">
         You can add more than one facility
@@ -435,7 +435,7 @@ const GetPetshopDetailProfile = () => {
   }, [info])
 
   return (
-    <div className="w-[500px] mt-48 space-y-10">
+    <div className="w-[500px] mt-20 space-y-10">
       <div>
         <h3 className="text-lg font-medium leading-normal">Your email address</h3>
         <Input value={petshop.info.email} onChange={emailHandle} className="w-full border-2 text-md h-12 mt-3 rounded-lgs" />
@@ -505,7 +505,7 @@ const GetPetshopPrice = () => {
   }, [petsPrice])
 
   return (
-    <div className="w-[500px] mt-40 ">
+    <div className="w-[500px] mt-20 ">
       <h3 className="text-2xl font-semibold leading-normal">Set your price <span className="text-primary/50 text-sm">IDR</span></h3>
       <div className="mt-5 space-y-5">
         {

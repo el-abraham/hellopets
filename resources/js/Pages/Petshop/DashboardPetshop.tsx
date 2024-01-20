@@ -1,6 +1,7 @@
 import Layout from "@/Layouts/Layout";
-import { PageProps } from "@/types";
+import { PageProps, Product, User } from "@/types";
 import { Head, Link } from "@inertiajs/react";
+import { format } from "date-fns";
 
 import {
   Card,
@@ -11,9 +12,20 @@ import {
   CardTitle,
 } from "@/Components/ui/card"
 
-export default function DetailPetshop({ auth, tab }: PageProps<{ tab?: string }>) {
 
-  const selected = "transactions";
+interface Transaction {
+  id: number;
+  from_date: number;
+  to_date?: number;
+  no_invoice: string;
+  total: number;
+  created_at: string;
+  user: User;
+  product: Product;
+}
+
+export default function DetailPetshop({ auth, tab, transactions }: PageProps<{ tab?: string, transactions: Transaction[] }>) {
+
 
   return (
 
@@ -34,7 +46,7 @@ export default function DetailPetshop({ auth, tab }: PageProps<{ tab?: string }>
             tab == "review" ?
               <ReviewList />
               :
-              <TransactionList />
+              <TransactionList transactions={transactions} />
           }
         </div>
       </Layout>
@@ -46,20 +58,26 @@ const ReviewList = () => {
   return (
 
     <div className="space-y-5">
-      <TransactionListItem />
+      {/* <TransactionListItem /> */}
     </div>
   )
 }
 
-const TransactionList = () => {
-  return (
+type TransactionListType = {
+  transactions: Transaction[]
+}
 
-    <div className="space-y-5">
-      <TransactionListItem />
-      <TransactionListItem />
-      <TransactionListItem />
-      <TransactionListItem />
-    </div>
+const TransactionList = ({ transactions }: TransactionListType) => {
+  console.log(transactions)
+  return (
+    < div className="space-y-5" >
+      {
+        transactions.map((transaction, index) => {
+          const key = Date.now() + index
+          return <TransactionListItem transaction={transaction} key={key} />
+        })
+      }
+    </div >
 
   )
 }
@@ -78,29 +96,44 @@ const TabLink = ({ selected, text, href }: TabLinkType) => {
   )
 }
 
-const TransactionListItem = () => {
+type TransactionListItemType = {
+  transaction: Transaction
+}
+
+const TransactionListItem = ({ transaction }: TransactionListItemType) => {
+
+  function displayDateFromString(dts: string) {
+    const date = new Date(dts)
+    return format(date, "LLL dd, y HH:mm")
+  }
+
+  function displayDateFromUnix(unix: number) {
+    const date = new Date(unix)
+    return format(date, "LLL dd, y")
+  }
+
   return (
     <Card className="rounded-md">
       <CardContent className="pt-6">
         <div className="flex space-x-10 items-start">
 
           <div className="w-1/6">
-            <label htmlFor="" className="text-xs text-muted-foreground">Date Transaction</label>
-            <p className="font-medium">No. 821IVAOI123</p>
+            <label htmlFor="" className="text-xs text-muted-foreground">{displayDateFromString(transaction.created_at)}</label>
+            <p className="font-medium">{transaction.no_invoice}</p>
           </div>
           <div className="flex-1">
             <label htmlFor="" className="text-xs text-muted-foreground">Customer Name</label>
-            <p className="font-medium">Daniel Abraham</p>
+            <p className="font-medium">{transaction.user.name}</p>
           </div>
           <div className="w-28">
             <label htmlFor="" className="text-xs text-muted-foreground">Pet</label>
             <div className="flex ">
-              <div className="px-2 rounded bg-primary-theme text-white font-medium">Dog</div>
+              <div className="px-2 rounded bg-primary-theme text-white font-medium">{transaction.product.name}</div>
             </div>
           </div>
-          <div className="">
+          <div className="w-52">
             <label htmlFor="" className="text-xs text-muted-foreground">Date Reserve</label>
-            <p className="font-medium">14 Feb 2024 - 17 Feb 2024</p>
+            <p className="font-medium">{displayDateFromUnix(transaction.from_date)} {transaction.to_date ? " - " + displayDateFromUnix(transaction.to_date) : ''} </p>
           </div>
           <div className="w-32">
             <label htmlFor="" className="text-xs text-muted-foreground">Status</label>

@@ -100,10 +100,13 @@ const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
     router.post('/shop-transaction', {
       shopId,
       productId: selectedPet,
-      date: date
+      date
     }, { forceFormData: true })
   }, [selectedPet, date])
 
+  useEffect(() => {
+    console.log(date)
+  }, [date])
 
   return (
     <div className={`${className ?? ''}`}>
@@ -149,7 +152,7 @@ const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
-              disabled={(dt) => dt < new Date()}
+              disabled={(dt) => dt < new Date(Date.now() - (24 * 60 * 60 * 1000))}
               initialFocus
               mode="range"
               defaultMonth={date?.from}

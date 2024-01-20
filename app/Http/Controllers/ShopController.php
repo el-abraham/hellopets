@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Shop;
+use App\Models\Transaction;
 use App\Models\ShopGallery;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,11 +33,21 @@ class ShopController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->role == "shop_master") {
+            $params = [];
             if ($request->has("tab")) {
                 return Inertia::render('Petshop/DashboardPetshop', ["tab" => $request->tab]);
             }
 
-            return Inertia::render('Petshop/DashboardPetshop');
+            $shop = Shop::where(['user_id'=> $user->id])->first();
+            
+            $params["transactions"] = $shop->transactions()->orderByDesc('created_at')->get()->map(function($transaction) {
+                $transaction["user"] = $transaction->user()->first();
+                $transaction["product"] = $transaction->product()->first();
+                return $transaction;
+            });
+            
+
+            return Inertia::render('Petshop/DashboardPetshop', $params);
         }
 
 
@@ -52,10 +63,7 @@ class ShopController extends Controller
 
     // }
 
-    public function makeTransaction(Request $request)
-    {
-        dd($request);
-    }
+    
 
     public function register()
     {
