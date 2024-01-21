@@ -35,17 +35,18 @@ class ShopController extends Controller
         if ($user && $user->role == "shop_master") {
             $params = [];
             if ($request->has("tab")) {
-                return Inertia::render('Petshop/DashboardPetshop', ["tab" => $request->tab]);
+                // return Inertia::render('Petshop/DashboardPetshop', ["tab" => $request->tab]);
+                $params["tab"] = $request->tab;
             }
 
-            $shop = Shop::where(['user_id'=> $user->id])->first();
-            
-            $params["transactions"] = $shop->transactions()->orderByDesc('created_at')->get()->map(function($transaction) {
+            $shop = Shop::where(['user_id' => $user->id])->first();
+
+            $params["transactions"] = $shop->transactions()->orderByDesc('created_at')->get()->map(function ($transaction) {
                 $transaction["user"] = $transaction->user()->first();
                 $transaction["product"] = $transaction->product()->first();
                 return $transaction;
             });
-            
+
 
             return Inertia::render('Petshop/DashboardPetshop', $params);
         }
@@ -63,7 +64,7 @@ class ShopController extends Controller
 
     // }
 
-    
+
 
     public function register()
     {

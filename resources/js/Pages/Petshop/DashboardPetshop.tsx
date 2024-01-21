@@ -1,5 +1,5 @@
 import Layout from "@/Layouts/Layout";
-import { PageProps, Product, User } from "@/types";
+import { PageProps, Product, User, Transaction } from "@/types";
 import { Head, Link } from "@inertiajs/react";
 import { format } from "date-fns";
 
@@ -12,17 +12,6 @@ import {
   CardTitle,
 } from "@/Components/ui/card"
 
-
-interface Transaction {
-  id: number;
-  from_date: number;
-  to_date?: number;
-  no_invoice: string;
-  total: number;
-  created_at: string;
-  user: User;
-  product: Product;
-}
 
 export default function DetailPetshop({ auth, tab, transactions }: PageProps<{ tab?: string, transactions: Transaction[] }>) {
 
@@ -72,10 +61,13 @@ const TransactionList = ({ transactions }: TransactionListType) => {
   return (
     < div className="space-y-5" >
       {
-        transactions.map((transaction, index) => {
-          const key = Date.now() + index
-          return <TransactionListItem transaction={transaction} key={key} />
-        })
+        transactions.length ?
+          transactions.map((transaction, index) => {
+            const key = Date.now() + index
+            return <TransactionListItem transaction={transaction} key={key} />
+          })
+          :
+          <div className="text-center text-lg opacity-70">Transaction not found</div>
       }
     </div >
 
@@ -123,12 +115,12 @@ const TransactionListItem = ({ transaction }: TransactionListItemType) => {
           </div>
           <div className="flex-1">
             <label htmlFor="" className="text-xs text-muted-foreground">Customer Name</label>
-            <p className="font-medium">{transaction.user.name}</p>
+            <p className="font-medium">{transaction.user?.name}</p>
           </div>
           <div className="w-28">
             <label htmlFor="" className="text-xs text-muted-foreground">Pet</label>
             <div className="flex ">
-              <div className="px-2 rounded bg-primary-theme text-white font-medium">{transaction.product.name}</div>
+              <div className="px-2 rounded bg-primary-theme text-white font-medium">{transaction.product?.name}</div>
             </div>
           </div>
           <div className="w-52">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -26,6 +27,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route::get('/orders', [CustomerController::class, 'orders'])->middleware(['auth', 'verified'])->name('customer.orders');
+
 Route::get('/shop-dashboard', [ShopController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('shop.dashboard');
 
 // Route::get('/shop-dashboard/transactions', function () {
@@ -35,6 +38,8 @@ Route::get('/shop-dashboard', [ShopController::class, 'dashboard'])->middleware(
 Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth', 'verified'])->name('shop.detail');
 
 Route::post('/shop-transaction', [TransactionController::class, 'makeTransaction'])->middleware(['auth', 'verified'])->name('shop.makeTransaction');
+
+Route::get('/orders', [CustomerController::class, 'orders'])->middleware(['auth', 'verified']);
 
 Route::get('/shop-register', [ShopController::class, 'register'])->middleware(['auth', 'verified'])->name('shop.register');
 

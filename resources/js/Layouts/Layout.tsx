@@ -6,6 +6,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { User } from '@/types';
 import HelloPetsLogo from '../images/hellopets RBD.png';
+import { FacebookIcon, InstagramIcon } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -22,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
 import { Button } from '@/Components/ui/button';
-import { AvatarIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, InstagramLogoIcon } from '@radix-ui/react-icons';
 
 
 type LayoutType = {
@@ -65,24 +66,24 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">My</Button>
+              <Button variant="outline" className='rounded-full px-3'>
+                <AvatarIcon className='w-6 h-6' />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Chat
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Settings
-                </DropdownMenuItem>
+                <Link href={route('shop.dashboard')}>
+                  <DropdownMenuItem>
+                    My Order
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuGroup>
               <DropdownMenuSeparator className='bg-primary/10' />
-              <DropdownMenuItem>
-                Log out
-              </DropdownMenuItem>
+              <Link href={route('logout')} method='post'>
+                <DropdownMenuItem>
+                  Log out
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -121,8 +122,8 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
 
   return (
     // <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div className="relative first-line:sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center dark:bg-dots-lighter dark:bg-gray-900   pt-5">
-      <div className='sm:px-5 lg:px-20 2xl:container pb-5'>
+    <div className="relative first-line:sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center dark:bg-dots-lighter dark:bg-gray-900   pt-5 flex flex-col">
+      <div className='sm:px-5 w-full lg:px-20 2xl:container pb-5'>
         <nav className='container-fluid w-full flex justify-between items-center'>
           <div>
             <Link href={route('welcome')}>
@@ -140,9 +141,17 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
 
       </div>
 
-      <hr />
-      <main>{children}</main>
+      <hr className='w-full' />
+      <main className='flex-1'>{children}</main>
 
+      <footer className='w-full bg-gray-200 '>
+        <div className='flex justify-center space-x-5 pt-5 pb-3'>
+          <FacebookIcon className='text-black/60' />
+          <InstagramIcon className='text-black/60' />
+
+        </div>
+        <div className='flex justify-center text-sm py-2 text-black/70'>© 2024 HelloPets</div>
+      </footer>
     </div >
   );
 }

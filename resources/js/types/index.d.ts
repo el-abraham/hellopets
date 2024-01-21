@@ -31,6 +31,19 @@ export interface Shop {
     description: string;
 }
 
+export interface Transaction {
+    id: number;
+    from_date: number;
+    to_date?: number;
+    no_invoice: string;
+    total: number;
+    created_at: string;
+    user?: User;
+    product?: Product;
+    shop?: Shop;
+}
+
+
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {

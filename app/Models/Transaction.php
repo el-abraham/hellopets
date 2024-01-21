@@ -21,11 +21,18 @@ class Transaction extends Model
         'product_id'
     ];
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function product():BelongsTo{
+    public function product(): BelongsTo
+    {
         return $this->belongsTo(Product::class);
+    }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
     }
 }
