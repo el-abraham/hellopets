@@ -4,7 +4,7 @@ import { PageProps, Shop } from '@/types';
 import { Badge } from '@/Components/ui/badge';
 
 
-export default function Welcome({ auth, laravelVersion, phpVersion, shops }: PageProps<{ laravelVersion: string, phpVersion: string, shops: (Shop & { products: string[], photo: string })[] }>) {
+export default function Welcome({ auth, laravelVersion, phpVersion, shops }: PageProps<{ laravelVersion: string, phpVersion: string, shops: (Shop & { products: string[], photo: string, ratingScore?: number })[] }>) {
 
 
   return (
@@ -18,7 +18,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, shops }: Pag
             {
               shops.map((shop, index) => {
                 const key = Date.now() + index;
-                return <ShopDisplayItem address={shop.alamat} name={shop.name} photo={shop.photo} products={shop.products} rating='' shopId={shop.id} key={key} />
+                return <ShopDisplayItem address={shop.alamat} name={shop.name} photo={shop.photo} products={shop.products} rating={shop.ratingScore ? shop.ratingScore.toFixed(1).toString() : ''} shopId={shop.id} key={key} />
               })
             }
           </div>

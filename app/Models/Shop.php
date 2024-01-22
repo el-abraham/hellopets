@@ -35,4 +35,9 @@ class Shop extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
 }

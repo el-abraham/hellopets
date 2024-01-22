@@ -2,7 +2,7 @@ import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
 import Layout from "@/Layouts/Layout";
 import { PageProps, Transaction } from "@/types";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { format } from "date-fns";
 import {
   Dialog,
@@ -13,12 +13,11 @@ import {
   DialogTrigger,
 } from "@/Components/ui/dialog"
 import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Textarea } from "@/Components/ui/textarea";
 
 
 export default function Orders({ auth, orders }: PageProps<{ orders: Transaction[] }>) {
-  console.log(orders)
   return (
 
     <>
@@ -54,6 +53,9 @@ type OrderListItemType = {
 
 const OrderListItem = ({ order }: OrderListItemType) => {
 
+  const [description, setDescription] = useState('')
+  const [rating, setRating] = useState(0);
+
   function displayDateFromString(dts: string) {
     const date = new Date(dts)
     return format(date, "LLL dd, y HH:mm")
@@ -63,6 +65,24 @@ const OrderListItem = ({ order }: OrderListItemType) => {
     const date = new Date(unix)
     return format(date, "LLL dd, y")
   }
+
+  const saveReview = useCallback(() => {
+    console.log(rating, description)
+    router.post(route('customer.review'), {
+      rating,
+      description,
+      transactionId: order.id
+    })
+  }, [rating, description])
+
+  const textareaHandle = (e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.currentTarget.value)
+
+  const onChangeRating = (e: number) => setRating(e)
+
+  const canSave = useMemo(() => {
+    return !(rating != 0 && description != '')
+
+  }, [rating, description])
 
   return (
     <Card className="rounded-md">
@@ -93,9 +113,8 @@ const OrderListItem = ({ order }: OrderListItemType) => {
           </div> */}
           <div className=" h-12 flex justify-center items-end">
             <Dialog>
-              <DialogTrigger>
-                <Button>Give a review</Button>
-
+              <DialogTrigger disabled={order.review ? true : false} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary-theme text-primary-foreground shadow h-9 px-4 py-2 hover:bg-primary-theme/90">
+                Give a review
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -104,14 +123,14 @@ const OrderListItem = ({ order }: OrderListItemType) => {
                 <div className="space-y-2">
                   <div>
                     <label className="text-sm">Rating</label>
-                    <RatingStartComponent />
+                    <RatingStartComponent value={rating} onChange={onChangeRating} />
                   </div>
-                  <Textarea rows={5} className="resize-none rounded" placeholder="type your review"></Textarea>
+                  <Textarea onChange={textareaHandle} value={description} rows={5} className="resize-none rounded" placeholder="type your review"></Textarea>
 
                 </div>
 
                 <div className="w-full flex justify-end">
-                  <Button>Save</Button>
+                  <Button disabled={canSave} onClick={saveReview}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -122,12 +141,17 @@ const OrderListItem = ({ order }: OrderListItemType) => {
   )
 }
 
-const RatingStartComponent = () => {
 
-  const [rating, setRating] = useState(0)
+type RatingStartComponentType = {
+  value: number;
+  onChange: (val: number) => void
+}
+
+
+const RatingStartComponent = ({ onChange, value }: RatingStartComponentType) => {
 
   const ratingHandle = (index: number) => {
-    setRating(index + 1)
+    onChange(index + 1)
   }
 
   const Start = ({ selected, index }: { selected?: boolean, index: number }) => {
@@ -146,7 +170,7 @@ const RatingStartComponent = () => {
       {
         Array.from({ length: 5 }, (_, idx) => {
           const key = Date.now() + idx;
-          return <Start key={key} index={idx} selected={idx + 1 <= rating} />;
+          return <Start key={key} index={idx} selected={idx + 1 <= value} />;
         })
       }
     </div>

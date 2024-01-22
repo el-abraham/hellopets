@@ -72,7 +72,7 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
-                <Link href={route('shop.dashboard')}>
+                <Link href={route('customer.orders')}>
                   <DropdownMenuItem>
                     My Order
                   </DropdownMenuItem>

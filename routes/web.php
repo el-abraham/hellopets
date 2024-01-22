@@ -39,7 +39,9 @@ Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth',
 
 Route::post('/shop-transaction', [TransactionController::class, 'makeTransaction'])->middleware(['auth', 'verified'])->name('shop.makeTransaction');
 
-Route::get('/orders', [CustomerController::class, 'orders'])->middleware(['auth', 'verified']);
+Route::get('/orders', [CustomerController::class, 'orders'])->middleware(['auth', 'verified'])->name('customer.orders');
+
+Route::post('/shop-review', [CustomerController::class, 'addReview'])->middleware(['auth', 'verified'])->name('customer.review');
 
 Route::get('/shop-register', [ShopController::class, 'register'])->middleware(['auth', 'verified'])->name('shop.register');
 

@@ -24,6 +24,11 @@ class ShopController extends Controller
                 return $photo;
             });
             $params["products"] = $shop->products()->get();
+
+            $params["reviews"] = $shop->reviews()->get()->map(function ($review) {
+                $review["user"] = $review->user()->first();
+                return $review;
+            });
         }
 
         return Inertia::render('Petshop/DetailPetshop', $params);
@@ -41,11 +46,18 @@ class ShopController extends Controller
 
             $shop = Shop::where(['user_id' => $user->id])->first();
 
-            $params["transactions"] = $shop->transactions()->orderByDesc('created_at')->get()->map(function ($transaction) {
-                $transaction["user"] = $transaction->user()->first();
-                $transaction["product"] = $transaction->product()->first();
-                return $transaction;
-            });
+            if ($request->has("tab") && $request->tab == "review") {
+                $params["reviews"] = $shop->reviews()->get()->map(function ($review) {
+                    $review["user"] = $review->user()->first();
+                    return $review;
+                });
+            } else {
+                $params["transactions"] = $shop->transactions()->orderByDesc('created_at')->get()->map(function ($transaction) {
+                    $transaction["user"] = $transaction->user()->first();
+                    $transaction["product"] = $transaction->product()->first();
+                    return $transaction;
+                });
+            }
 
 
             return Inertia::render('Petshop/DashboardPetshop', $params);

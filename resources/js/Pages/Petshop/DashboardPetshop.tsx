@@ -1,5 +1,5 @@
 import Layout from "@/Layouts/Layout";
-import { PageProps, Product, User, Transaction } from "@/types";
+import { PageProps, Product, User, Transaction, Review } from "@/types";
 import { Head, Link } from "@inertiajs/react";
 import { format } from "date-fns";
 
@@ -11,29 +11,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/Components/ui/card"
+import { StarIcon } from "@radix-ui/react-icons";
 
 
-export default function DetailPetshop({ auth, tab, transactions }: PageProps<{ tab?: string, transactions: Transaction[] }>) {
-
+export default function DetailPetshop({ auth, tab, transactions, reviews }: PageProps<{ tab?: string, transactions: Transaction[], reviews: Review[] }>) {
 
   return (
 
     <>
       <Head title="HelloPets" />
       <Layout user={auth.user}>
-        <div className="container lg:px-40 pb-20">
-          <div className="flex justify-center mb-10">
-            <div className="flex mt-10 items-center space-x-10 pb-5 px-40 border-b">
-              <TabLink href={route("shop.dashboard", { tab: "transactions" })} text="Transactions" selected={tab ? tab == "transactions" : true} />
-              <TabLink href={route("shop.dashboard", { tab: "review" })} text="Review" selected={tab ? tab == "review" : false} />
-              {/* <div className="text-lg font-medium">Transactions</div>
-                            <div className="text-lg ">Review</div> */}
-            </div>
-          </div>
+        <div className="pb-20">
 
+          <div className="container lg:px-40 ">
+            <div className="flex justify-center mb-10">
+              <div className="flex mt-10 items-center space-x-10 pb-5 px-40 border-b">
+                <TabLink href={route("shop.dashboard", { tab: "transactions" })} text="Transactions" selected={tab ? tab == "transactions" : true} />
+                <TabLink href={route("shop.dashboard", { tab: "review" })} text="Review" selected={tab ? tab == "review" : false} />
+                {/* <div className="text-lg font-medium">Transactions</div>
+                            <div className="text-lg ">Review</div> */}
+              </div>
+            </div>
+
+          </div>
           {
             tab == "review" ?
-              <ReviewList />
+              <ReviewList reviews={reviews} />
               :
               <TransactionList transactions={transactions} />
           }
@@ -43,11 +46,37 @@ export default function DetailPetshop({ auth, tab, transactions }: PageProps<{ t
   )
 }
 
-const ReviewList = () => {
+type ReviewListType = {
+  reviews: Review[]
+}
+
+const ReviewList = ({ reviews }: ReviewListType) => {
   return (
 
-    <div className="space-y-5">
-      {/* <TransactionListItem /> */}
+    <div className="space-y-5 grid grid-cols-2 max-w-full">
+      {
+        reviews.length ?
+          reviews.map((review, index) => {
+            const key = Date.now() + index
+            return (
+
+              <Card key={key} className="w-full">
+                <CardHeader className="pb-2">
+                  <CardTitle>{review.user?.name}</CardTitle>
+                  <CardDescription className="flex items-center">
+                    <StarIcon />
+                    <span>{review.rating}</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="">
+                  <p>{review.description}</p>
+                </CardContent>
+              </Card>
+            )
+          })
+          :
+          <div className="text-center text-lg opacity-70">Reviews not found</div>
+      }
     </div>
   )
 }

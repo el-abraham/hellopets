@@ -24,6 +24,11 @@ return new class extends Migration
                 indexName: 'reviews_user_id'
             );
 
+            $table->foreignId('transaction_id')->constrained(
+                table: 'transactions',
+                indexName: 'reviews_transaction_id'
+            );
+
             $table->string('description');
 
             $table->integer('rating');
@@ -42,6 +47,7 @@ return new class extends Migration
         Schema::table('reviews', function (Blueprint $table) {
             $table->dropForeign('reviews_shop_id');
             $table->dropForeign('reviews_user_id');
+            $table->dropForeign('reviews_transaction_id');
             $table->dropSoftDeletes();
         });
 

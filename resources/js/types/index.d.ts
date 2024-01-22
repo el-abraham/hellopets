@@ -41,6 +41,14 @@ export interface Transaction {
     user?: User;
     product?: Product;
     shop?: Shop;
+    review?: Review;
+}
+
+export interface Review {
+    id: number;
+    rating: number;
+    user?: User;
+    description: string;
 }
 
 
