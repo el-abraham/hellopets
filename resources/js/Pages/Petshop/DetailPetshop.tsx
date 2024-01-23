@@ -35,7 +35,7 @@ import { Calendar } from "@/Components/ui/calendar";
 import { Input } from "@/Components/ui/input";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { addDays, format } from "date-fns";
+import { addDays, format, differenceInDays } from "date-fns";
 import { Gallery, PageProps, Product, Review, Shop } from "@/types";
 import { Head, router } from "@inertiajs/react";
 import Layout from "@/Layouts/Layout";
@@ -44,6 +44,7 @@ import Layout from "@/Layouts/Layout";
 
 
 export default function DetailPetshop({ shop, galleries, products, auth, reviews }: PageProps<{ shop: Shop, galleries: Gallery[], products: Product[], reviews: Review[] }>) {
+
 
   return (
     <>
@@ -84,7 +85,7 @@ export default function DetailPetshop({ shop, galleries, products, auth, reviews
               <ShopInfo address={shop.alamat} telp={shop.no_telp} />
               <div className="mt-20" />
             </div>
-            <OrderSection shopId={shop.id} className="w-4/12 rounded-xl self-start border p-8" products={products} />
+            <OrderSection user={auth.user} shopId={shop.id} className="w-4/12 rounded-xl self-start border p-8" products={products} />
 
           </div>
           <ShopReviews reviews={reviews} />
@@ -98,10 +99,11 @@ export default function DetailPetshop({ shop, galleries, products, auth, reviews
 type OrderSectionType = {
   shopId: number,
   className?: string,
-  products: Product[]
+  products: Product[],
+  user?: null | any
 }
 
-const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
+const OrderSection = ({ user, products, className, shopId }: OrderSectionType) => {
   const [date, setDate] = useState<DateRange | undefined>()
   const [selectedPet, setSelectedPet] = useState('');
 
@@ -119,9 +121,27 @@ const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
     }, { forceFormData: true })
   }, [selectedPet, date])
 
+  const reserveDisaled = useMemo(() => {
+    if (user && date && selectedPet != '') {
+      return false
+    }
+    return true
+  }, [user, date, selectedPet])
+
   // useEffect(() => {
   //   console.log(date)
   // }, [date])
+
+  const totalPrice = useMemo(() => {
+    if (!reserveDisaled) {
+      // const 
+      // (products.find(pr => pr.id.toString() == selectedPet)?.price ?? 0 ) * differenceInDays(date)
+      const petprice = products.find(pr => pr.id.toString() == selectedPet)!.price
+      const totalDays = date?.to ? differenceInDays(date.to, date.from!) + 1 : 1
+      return petprice * totalDays;
+    }
+    return 0;
+  }, [date, selectedPet])
 
   return (
     <div className={`${className ?? ''}`}>
@@ -182,18 +202,46 @@ const OrderSection = ({ products, className, shopId }: OrderSectionType) => {
       <div className="mt-8" />
 
       <Dialog>
-        <DialogTrigger className="w-full text-white bg-primary-theme rounded-md text-md font-bold h-12">Reserve</DialogTrigger>
+        <DialogTrigger disabled={reserveDisaled} className="disabled:bg-primary-theme/70 w-full text-white bg-primary-theme rounded-md text-md font-bold h-12">Reserve</DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
-              <Button onClick={postReserve}>Oke</Button>
             </DialogDescription>
           </DialogHeader>
+          <div className="flex space-x-5">
+            <div className="w-1/6">
+              <label htmlFor="" className="text-xs text-muted-foreground">Pet</label>
+              <p className="font-medium text-lg">{products.find(pr => pr.id.toString() == selectedPet)?.name}</p>
+            </div>
+            <div className="3/6">
+              <label htmlFor="" className="text-xs text-muted-foreground">Date</label>
+              <p className="font-medium text-lg">
+                {date?.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} -{" "}
+                      {format(date.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(date.from, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </p>
+            </div>
+            <div className="flex-1">
+              <label htmlFor="" className="text-xs text-muted-foreground">Price</label>
+              <p className="font-medium text-lg"> Rp {totalPrice}</p>
+            </div>
+          </div>
+          <Button onClick={postReserve}>Checkout</Button>
         </DialogContent>
       </Dialog>
+      {
+        !user ? <p className="text-sm text-red-500">*You must be logged</p> : <></>
+      }
     </div>
   )
 }

@@ -73,7 +73,8 @@ export const usePetshopRegistration = create<Action & State>((set, get) => ({
   },
   nextStep: () => {
     set((state) => ({
-      step: state.step + 1
+      step: state.step + 1,
+      progress: state.progress + (100 / 9)
     }))
     get().setNextButton(false)
   }

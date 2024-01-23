@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $params = [
             'canLogin' => Route::has('login'),
@@ -19,7 +19,10 @@ class HomeController extends Controller
             'phpVersion' => PHP_VERSION,
         ];
 
-        $shops = Shop::orderByDesc('created_at')->take(20)->get();
+        $shops = Shop::orderByDesc('created_at')->get();
+
+
+        // $shops = $shops->take(20)->get();
         $params["shops"] = $shops->map(function ($shop) {
 
             $products = $shop->products()->get()->map(function ($facility) {
@@ -47,6 +50,29 @@ class HomeController extends Controller
             }) / count($ratings)) : 0;
             return $shop;
         });
+
+        if ($request->has("pet")) {
+            $params["shops"] = gettype($params["shops"]) == "object" ? $params["shops"]->toArray() : $params["shops"];
+            $params["shops"] = array_filter($params["shops"], function ($val) {
+                $d = array_filter($val["products"]->toArray(), function ($pr) {
+                    global $request;
+
+                    return  $pr == $request->pet;
+                });
+                return count($d) > 0;
+            });
+        }
+
+        if ($request->has("rating")) {
+            $params["shops"] = gettype($params["shops"]) == "object" ? $params["shops"]->toArray() : $params["shops"];
+
+            usort($params["shops"], function ($a, $b) {
+                return $b["ratingScore"] - $a["ratingScore"];
+            });
+        }
+
+
+
 
         return Inertia::render('Welcome', $params);
     }

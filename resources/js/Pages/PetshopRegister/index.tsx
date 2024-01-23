@@ -12,8 +12,6 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 import { PageProps, User } from "@/types";
 
 
-const fileTypes = ["JPG", "PNG", "GIF", "JPEG"];
-
 
 const petsOption = [
   {
@@ -151,6 +149,7 @@ const GetPetshopName = () => {
       ...petshop,
       name: e.currentTarget.value
     })
+
     setNextButton(e.currentTarget.value != '')
   }
 

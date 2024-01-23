@@ -35,7 +35,7 @@ Route::get('/shop-dashboard', [ShopController::class, 'dashboard'])->middleware(
 //     return Inertia::render('Petshop/DashboardPetshop');
 // })->middleware(['auth', 'verified'])->name('shop.dashboard');
 
-Route::get('/shop/{id}', [ShopController::class, 'detail'])->middleware(['auth', 'verified'])->name('shop.detail');
+Route::get('/shop/{id}', [ShopController::class, 'detail'])->name('shop.detail');
 
 Route::post('/shop-transaction', [TransactionController::class, 'makeTransaction'])->middleware(['auth', 'verified'])->name('shop.makeTransaction');
 
