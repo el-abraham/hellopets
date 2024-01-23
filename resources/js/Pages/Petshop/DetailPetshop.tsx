@@ -73,7 +73,7 @@ export default function DetailPetshop({ shop, galleries, products, auth, reviews
           </section>
           <div className="flex relative mt-10 justify-between">
             <div className="w-7/12 relative">
-              <ShopHeader name={shop.name} rating={(reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1).toString()} />
+              <ShopHeader name={shop.name} rating={reviews.length ? (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1).toString() : ''} />
               <div className="mt-10" />
               <PetIcons pets={products} />
               <div className="mt-20" />
@@ -232,7 +232,7 @@ const ShopReviews = ({ reviews }: ShopReviewsType) => {
     <div className="space-y-5">
       <h2 className="font-semibold text-2xl text-center">Rating & Reviews</h2>
 
-      <div className="grid grid-cols-2 w-full gap-5">
+      <div className={`${reviews.length ? 'grid grid-cols-2' : ''} w-full gap-5`}>
         {
           reviews.length != 0 ?
             reviews.map((review, index) => {

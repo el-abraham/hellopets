@@ -4,7 +4,7 @@ import { Input } from "@/Components/ui/input";
 import { Progress } from "@/Components/ui/progress";
 import { Textarea } from "@/Components/ui/textarea";
 import { useEffect, useMemo, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
+// import { FileUploader } from "react-drag-drop-files";
 import { router } from '@inertiajs/react'
 import { IPetshopProduct, usePetshopRegistration } from "@/stores/PetshopRegistration";
 import { SelectTrigger, Select, SelectValue, SelectContent, SelectItem } from "@/Components/ui/select";
@@ -169,13 +169,20 @@ type UploadImageType = {
 }
 
 const UploadImage = ({ shop_id }: UploadImageType) => {
-  const handleChange = (file: any) => {
-    router.post('/upload-image', {
-      image: file,
-      shop_id
-    }, {
-      forceFormData: true
-    });
+
+  // const FileUploader = require("react-drag-drop-files").FileUploader
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+
+    if (files) {
+      router.post('/upload-image', {
+        image: Array.from(files),
+        shop_id
+      }, {
+        forceFormData: true
+      });
+    }
   };
 
   return (
@@ -186,7 +193,8 @@ const UploadImage = ({ shop_id }: UploadImageType) => {
       </span>
 
       <div className="mt-5">
-        <FileUploader disabled={shop_id == undefined} multiple handleChange={handleChange} name="file" types={fileTypes} />
+        <Input id="picture" accept="image/*" onChange={handleChange} multiple type="file" />
+        {/* <FileUploader disabled={shop_id == undefined} multiple handleChange={handleChange} name="file" types={fileTypes} /> */}
 
       </div>
 
@@ -200,13 +208,17 @@ type AfterUploadImageType = {
 }
 
 const AfterUploadImage = ({ images, shop_id }: AfterUploadImageType) => {
-  const handleChange = (file: any) => {
-    router.post('/upload-image', {
-      image: file,
-      shop_id
-    }, {
-      forceFormData: true
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+
+    if (files) {
+      router.post('/upload-image', {
+        image: Array.from(files),
+        shop_id
+      }, {
+        forceFormData: true
+      });
+    }
   };
 
   return (
@@ -218,8 +230,9 @@ const AfterUploadImage = ({ images, shop_id }: AfterUploadImageType) => {
         You must upload at least 5 photos
       </span>
       <div className="mt-3">
+        <Input id="picture" accept="image/*" onChange={handleChange} multiple type="file" />
 
-        <FileUploader multiple label={"Upload more photos"} handleChange={handleChange} name="file" types={fileTypes} />
+        {/* <FileUploader multiple label={"Upload more photos"} handleChange={handleChange} name="file" types={fileTypes} /> */}
       </div>
       <div className="flex-col space-y-5 mt-5">
 

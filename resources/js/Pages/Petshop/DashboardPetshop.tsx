@@ -53,7 +53,7 @@ type ReviewListType = {
 const ReviewList = ({ reviews }: ReviewListType) => {
   return (
 
-    <div className="space-y-5 grid grid-cols-2 max-w-full">
+    <div className={`space-y-5 ${reviews.length ? 'grid grid-cols-2' : ''} max-w-full`}>
       {
         reviews.length ?
           reviews.map((review, index) => {
@@ -86,7 +86,7 @@ type TransactionListType = {
 }
 
 const TransactionList = ({ transactions }: TransactionListType) => {
-  console.log(transactions)
+
   return (
     < div className="space-y-5" >
       {

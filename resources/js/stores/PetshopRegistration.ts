@@ -75,7 +75,6 @@ export const usePetshopRegistration = create<Action & State>((set, get) => ({
     set((state) => ({
       step: state.step + 1
     }))
-    console.log(get().petshop)
     get().setNextButton(false)
   }
 }))

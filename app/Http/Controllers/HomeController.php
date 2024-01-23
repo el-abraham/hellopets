@@ -42,9 +42,9 @@ class HomeController extends Controller
             // dd($reviews->map(function ($review) {
             //     return $review["rating"];
             // }));
-            $shop["ratingScore"] = (array_reduce($ratings, function ($v1, $v2) {
+            $shop["ratingScore"] = count($ratings) != 0 ? (array_reduce($ratings, function ($v1, $v2) {
                 return $v1 + $v2;
-            }) / count($ratings));
+            }) / count($ratings)) : 0;
             return $shop;
         });
 

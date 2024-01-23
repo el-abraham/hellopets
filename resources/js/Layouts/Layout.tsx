@@ -53,7 +53,7 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
                   </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator className='bg-primary/10' />
-                <Link href={route('logout')} method='post'>
+                <Link href={route('logout')} method='post' as='button'>
                   <DropdownMenuItem>
                     Log out
                   </DropdownMenuItem>
