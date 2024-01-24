@@ -156,7 +156,7 @@ const GetPetshopName = () => {
   return (
     <div className="w-[500px] mt-40">
       <h3 className="text-2xl font-semibold leading-normal">Your pet house name</h3>
-      <span className="text-primary/50">ini subscription</span>
+      <span className="text-primary/50">type something cool</span>
       <Textarea spellCheck={false} onChange={textareaHandle} className="resize-none font-medium text-lg rounded-lg h-32 w-full mt-5 border-2" />
 
     </div>
@@ -215,7 +215,7 @@ const AfterUploadImage = ({ images, shop_id }: AfterUploadImageType) => {
         image: Array.from(files),
         shop_id
       }, {
-        forceFormData: true
+        forceFormData: true,
       });
     }
   };

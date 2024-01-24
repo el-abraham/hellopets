@@ -257,13 +257,13 @@ const ShopInfo = ({ address, telp }: ShopInfoType) => {
       <h2 className="font-semibold text-2xl">Info</h2>
 
       <div className="flex">
-        <p className="w-20">No. Telp : </p>
-        <p className="font-medium">+62 {telp} </p>
+        <p className="w-20  flex-0">No. Telp : </p>
+        <p className="font-medium flex-1">+62 {telp} </p>
       </div>
 
       <div className="flex">
-        <p className="w-20">Address : </p>
-        <p className="font-medium">{address} </p>
+        <p className="w-20 flex-0">Address : </p>
+        <p className="font-medium flex-1">{address} </p>
       </div>
     </div>
 

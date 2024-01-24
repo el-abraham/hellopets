@@ -53,17 +53,17 @@ Route::post('/shop-register', [ShopController::class, 'store']);
 
 Route::post('/upload-image', [ShopGalleryController::class, 'upload']);
 
-Route::get('/testing', function () {
-    $client = new GuzzleHttp\Client();
-    $res = $client->get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+// Route::get('/testing', function () {
+//     $client = new GuzzleHttp\Client();
+//     $res = $client->get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
 
-    dd($res->getBody());
-});
+//     dd($res->getBody());
+// });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 require __DIR__ . '/auth.php';

@@ -67,7 +67,6 @@ const OrderListItem = ({ order }: OrderListItemType) => {
   }
 
   const saveReview = useCallback(() => {
-    console.log(rating, description)
     router.post(route('customer.review'), {
       rating,
       description,

@@ -20,15 +20,15 @@ return new class extends Migration
                 indexName: 'shops_user_id'
             );
 
-            $table->string("name");
+            $table->text("name");
 
-            $table->string("description");
+            $table->text("description");
 
             $table->string("email");
 
-            $table->string("facilities");
+            $table->text("facilities");
 
-            $table->string("alamat");
+            $table->text("alamat");
 
             $table->string("no_telp");
 

@@ -40,5 +40,7 @@ class CustomerController extends Controller
                 "rating" => $request->rating
             ]);
         }
+
+        return to_route('customer.orders');
     }
 }

@@ -146,8 +146,12 @@ export default function Layout({ children, user }: PropsWithChildren & LayoutTyp
 
       <footer className='w-full bg-gray-200 '>
         <div className='flex justify-center space-x-5 pt-5 pb-3'>
-          <FacebookIcon className='text-black/60' />
-          <InstagramIcon className='text-black/60' />
+          <a target='_blank' href='https://www.facebook.com/people/Hellopets/100067913265159/?mibextid=ZbWKwL'>
+            <FacebookIcon className='text-black/60' />
+          </a>
+          <a target='_blank' href='https://www.instagram.com/hellopets_official?igsh=OThuanJwamNsdGc1' >
+            <InstagramIcon className='text-black/60' />
+          </a>
 
         </div>
         <div className='flex justify-center text-sm py-2 text-black/70'>© 2024 HelloPets</div>

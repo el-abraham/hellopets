@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 export default function Dashboard({ auth }: PageProps) {
   useEffect(() => {
-    console.log(auth)
   }, [])
   return (
     <AuthenticatedLayout

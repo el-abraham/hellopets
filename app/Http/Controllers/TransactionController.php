@@ -37,6 +37,8 @@ class TransactionController extends Controller
             'total' => $total,
             'no_invoice' => $invoice
         ]);
+
+        return to_route('customer.orders');
     }
 
     private function callculateTotal($fromDate, $toDate = null, $dailyRate) {
